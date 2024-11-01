@@ -5,7 +5,7 @@ const router = new Router({
 });
 
 router.get("/:projectName", (ctx) => {
-  console.log("123");
+  throw "test error";
   ctx.res.end("Hello World");
 });
 

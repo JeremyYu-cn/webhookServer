@@ -1,24 +1,33 @@
 import Koa from "koa";
 import cors from "@koa/cors";
+import koaBody from "koa-body";
 import router from "./src/router";
-import Config from "./config";
+import config from "./config";
 import { errorHandle } from "./src/middleware";
 
 const app = new Koa();
 
-// Global error handler
+// Global Handle Error Middleware
 app.use(errorHandle);
 
-// CORS
+// Handle CORS
 app.use(cors());
+
+// Handle Request's JSON Parameters
+app.use(
+  koaBody({
+    json: true,
+  })
+);
 
 // RESTFul Router
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(Config.port, () => {
+// Start Listen Port
+app.listen(config.port, () => {
   console.log(`
-    Web hook server running at ${Config.port}
+    Web hook server running at ${config.port}
     Environment: ${process.env.NODE_ENV}
   `);
 });

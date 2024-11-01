@@ -1,14 +1,21 @@
+import path from "node:path";
+
 type TConfig = {
-  port: number;
+  [key: string]: {
+    port: number;
+    logPath: string;
+  };
 };
 
-const Config = {
+const Config: TConfig = {
   development: {
     port: 10010,
+    logPath: path.resolve(__dirname, "_log"),
   },
   production: {
     port: 10086,
+    logPath: path.resolve(__dirname, "_log"),
   },
-}[process.env.NODE_ENV ?? "development"] as TConfig;
+};
 
-export default Config;
+export default Config[process.env.NODE_ENV ?? "development"];

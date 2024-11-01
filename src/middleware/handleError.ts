@@ -1,6 +1,8 @@
 import type Koa from "koa";
+import { globalLog } from "../utils/logger";
+import { logFormat } from "../utils/format";
 /**
- * This is a common error handler, which is used to handle unknown error.
+ * A common error handler, which is used to handle server's unknown error.
  * And report to backend
  */
 export default async function errorHandle(
@@ -10,6 +12,7 @@ export default async function errorHandle(
   try {
     await next();
   } catch (err) {
+    globalLog.error(logFormat(ctx, err));
     ctx.res.statusCode = 500;
     ctx.res.end("Server Error");
   }
