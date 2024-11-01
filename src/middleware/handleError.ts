@@ -12,6 +12,7 @@ export default async function errorHandle(
   try {
     await next();
   } catch (err) {
+    console.log(err);
     globalLog.error(logFormat(ctx, err));
     ctx.res.statusCode = 500;
     ctx.res.end("Server Error");

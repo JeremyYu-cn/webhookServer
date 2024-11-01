@@ -6,11 +6,16 @@ interface ICommonResponseT {}
 
 interface IBodyRequest<T extends Record<string, any> = {}>
   extends IRequestType {
-  body: T;
+  body: T | unknown;
 }
 
 namespace NodeJS {
   interface ProcessEnv {
     NODE_ENV: "development" | "production";
   }
+}
+
+declare module "*.json" {
+  const value: any;
+  export default value;
 }
