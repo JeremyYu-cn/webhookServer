@@ -26,7 +26,7 @@
 
 ## Start
 
-### Install Packages
+### 1.Install Packages
 
 - NPM
 
@@ -40,19 +40,19 @@
   yarn
 ```
 
-### Dev
+### 2.Dev
 
 ```shell
   yarn dev
 ```
 
-### Deploy
+### 3.Deploy
 
 ```shell
   yarn start
 ```
 
-### Unit Test
+### 4.Unit Test
 
 ```shell
   yarn test
