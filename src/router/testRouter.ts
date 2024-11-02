@@ -3,7 +3,7 @@ import { resFormat } from "../utils/format";
 
 const router = new Router({});
 
-/** Get Project List */
+/** Test Router */
 router.get("/test/:projectName", async (ctx, next) => {
   const { projectName } = ctx.params;
   ctx.body = resFormat(true, `Hello ${projectName}`);

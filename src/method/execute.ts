@@ -1,11 +1,5 @@
-import {
-  Worker,
-  isMainThread,
-  parentPort,
-  workerData,
-} from "node:worker_threads";
+import { Worker } from "node:worker_threads";
 import path from "node:path";
-import { replaceData } from "../utils/public";
 import { webhookLog } from "../utils/logger";
 import ServerCache from "../utils/cache";
 

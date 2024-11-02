@@ -40,27 +40,15 @@
 
 ### Dev
 
-```shell
-  yarn dev
-```
-
-### Preview
-
-```shell
-  yarn preview
-```
+    ```shell
+      yarn dev
+    ```
 
 ### Deploy
 
-```shell
-  yarn start
-```
-
-### Test
-
-```shell
-  yarn test
-```
+    ```shell
+      yarn start
+    ```
 
 ## Architecture
 
@@ -104,6 +92,10 @@ It can be seen that when we need to query data, the program will first search in
 ## API Design
 
 When designing apis, the function of the corresponding URL can be clearly described through the design of RESTful apis, such as the request method get to obtain data, post to add data or execute methods, put to modify data and so on.
+
+### Dynamic Router
+
+The definition of dynamic routing reduces the repeated definition of routing rules, reduces the amount of data transmission, and generates a semantically oriented API.
 
 ### API List：
 
@@ -177,3 +169,43 @@ When designing apis, the function of the corresponding URL can be clearly descri
    - path: /exec/:requestId
 
    - method: GET
+
+## Business
+
+### Dynamic URL Design
+
+In the url design of webhook project, the **dynamic webhook** url is implemented by the template string of '{name}'. It gives the template string the ability to dynamically execute webhook projects by being able to dynamically route parameters or replace them with incoming data.
+
+For example:
+
+Router url: /api/webhook/project/exec/`project_11`
+
+Project's url: http://localhost:10010/api/test/{projectName}
+
+It will replace `{projectName}` into `project_11` automatically.
+
+### Optimizations
+
+### Preventing Cache Breakdown
+
+In order to prevent a certain time when the cache expires and a large number of users pour in, the program designs a request queue mechanism, the principle is as follows:
+
+- When the cache fails and the same URL is requested several times at the same time, the program will launch a query database request, and collecting all requests in this query tim, when the database query is successful, all requests return a unified query result, and save to the cache. As shown below:
+
+![alt text](/doc/images/Cache%20Breakdown.png)
+
+### Lock
+
+In order to prevent the user from repeatedly requesting the API over a period of time, the program uses the cache to add a request lock, which is used as follows:
+
+- When the user makes a request other than GET and OPTION, the program will automatically add the corresponding API request lock to the user and delete it after the API is successfully executed. If the lock exists, the API is not allowed to be requested.
+
+### Exception capture
+
+Programs can use logger to record all behavior data, and add global exception capture code to koa service to capture unknown exception to ensure service stability. In addition, we can use Google Analysis to replace logger.
+
+### Cluster
+
+In order to cope with high concurrency, we can use the multi-process mode in Node to increase the amount of concurrency. The specific principle is as follows:
+
+![alt text](/doc/images/process.png)
