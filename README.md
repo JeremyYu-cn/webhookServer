@@ -18,6 +18,8 @@
 
 - Language: Typescript
 
+- Node.js Version: v20.11.0
+
 - Libs: Koa, @koa/router, koa-body, koa-cors, log4js, uuid, jest
 
 - Author: Zhiming Yu
@@ -28,27 +30,33 @@
 
 - NPM
 
-  ```shell
-    npm install
-  ```
+```shell
+  npm install
+```
 
 - yarn
 
-  ```shell
-    yarn
-  ```
+```shell
+  yarn
+```
 
 ### Dev
 
-    ```shell
-      yarn dev
-    ```
+```shell
+  yarn dev
+```
 
 ### Deploy
 
-    ```shell
-      yarn start
-    ```
+```shell
+  yarn start
+```
+
+### Unit Test
+
+```shell
+  yarn test
+```
 
 ## Architecture
 
@@ -221,3 +229,19 @@ Programs can use logger to record all behavior data, and add global exception ca
 In order to cope with high concurrency, we can use the multi-process mode in Node to increase the amount of concurrency. The specific principle is as follows:
 
 ![alt text](/doc/images/process.png)
+
+## Security
+
+1. To prevent malicious requests from users, the project has added request locks to all requests that are not 'GET' and 'OPTION'.
+
+2. Consider using 'https' to encrypt the request message.
+
+3. Add authentication, such as JWT, or cookies, to each user request to ensure that the request is legitimate.
+
+## Improvement
+
+1. Due to time constraints, the program only generates simple native HTML from the template in the GET request. An improved SSR framework can be used, such as Vue-Server-Render or React-Server-Render.
+
+2. Replace native data management with MongoDB or Mysql.
+
+3. Use Redius to replace the program cache and implement persistence.

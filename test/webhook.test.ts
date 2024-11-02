@@ -8,7 +8,6 @@ describe("test webhook server", () => {
     expect(Array.isArray(json.data)).toBe(true);
     expect(json.err).toBe(null);
   });
-
   test("get webhook project detail", async () => {
     const res = await fetch(`${url}/detail/project_1`);
     const json = await res.json();
@@ -16,7 +15,6 @@ describe("test webhook server", () => {
     expect(json.data).not.toBeNull();
     expect(json.err).toBe(null);
   });
-
   test("create webhook project record", async () => {
     const res = await fetch(`${url}`, {
       method: "POST",
@@ -34,7 +32,6 @@ describe("test webhook server", () => {
     expect(json.data).toBe(null);
     expect(json.err).toBe(null);
   });
-
   test("create webhook project record fail with same project name", async () => {
     const res = await fetch(`${url}`, {
       method: "POST",
@@ -52,7 +49,6 @@ describe("test webhook server", () => {
     expect(json.data).toBe(null);
     expect(json.err).toBe(null);
   });
-
   test("modify webhook project record", async () => {
     const res = await fetch(`${url}/test_delete`, {
       method: "PUT",
@@ -69,7 +65,6 @@ describe("test webhook server", () => {
     expect(json.data).toBe(null);
     expect(json.err).toBe(null);
   });
-
   test("delete webhook project", async () => {
     const res = await fetch(`${url}/test_delete`, {
       method: "DELETE",
@@ -79,7 +74,6 @@ describe("test webhook server", () => {
     expect(json.data).toBe(null);
     expect(json.err).toBe(null);
   });
-
   test("execute webhook", () => {
     return new Promise(async (resolve) => {
       const res = await fetch(`${url}/exec/project_11`, {

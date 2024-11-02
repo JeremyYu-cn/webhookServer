@@ -9,6 +9,7 @@ import {
   getWebhookList,
 } from "../method/webhook";
 import { resFormat } from "../utils/format";
+import { createListTable } from "../html/webhook";
 
 type TProjectParams = {
   name: string;
@@ -27,7 +28,11 @@ const router = new Router({
 router.get("/list", async (ctx, next) => {
   const { page, size } = <TProjectListQuery>ctx.query;
   const list = await getWebhookList(page ?? 1, size ?? 10);
-  ctx.body = resFormat(true, list);
+
+  ctx.res.setHeader("Content-Type", "text/html");
+  ctx.body = createListTable(list ?? []);
+
+  // ctx.body = resFormat(true, list);
 
   await next();
 });
@@ -35,8 +40,9 @@ router.get("/list", async (ctx, next) => {
 /** Get Project Detail By Name */
 router.get("/detail/:name", async (ctx, next) => {
   const { name } = <TProjectParams>ctx.params;
-  const list = await getWebhookDetail(name);
-  ctx.body = resFormat(true, list);
+  const res = await getWebhookDetail(name);
+
+  ctx.body = resFormat(true, res);
 
   await next();
 });
