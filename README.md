@@ -220,6 +220,8 @@ In order to prevent the user from repeatedly requesting the API over a period of
 
 - When the user makes a request other than GET and OPTION, the program will automatically add the corresponding API request lock to the user and delete it after the API is successfully executed. If the lock exists, the API is not allowed to be requested.
 
+![alt text](/doc/images/lock.png)
+
 ### Exception capture
 
 Programs can use logger to record all behavior data, and add global exception capture code to koa service to capture unknown exception to ensure service stability. In addition, we can use Google Analysis to replace logger.
