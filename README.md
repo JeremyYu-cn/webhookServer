@@ -70,7 +70,7 @@ The program is organized into four main modules: the server, RESTful router, bus
 
 - Finally, the database/cache module is responsible for data storage.
 
-![alt text](/doc/images/architecture.png)
+![alt text](./doc/images/architecture.png)
 
 ## Data model and get data policy
 
@@ -93,7 +93,7 @@ The main data model of the project is the Webhook project table, which is design
 
 - The following chart presents the process of getting data when the user requests the API:
 
-![alt text](/doc/images/dataPolicy.png)
+![alt text](./doc/images/dataPolicy.png)
 
 It can be seen that when we need to query data, the program will first search in the cache, when the cache exists, the program will immediately return the data, using the characteristics of high cache speed to reduce the request time and reduce the number of database queries. When the cache does not exist, the program requests a database query and saves the query results to the cache.
 
@@ -200,7 +200,7 @@ In order to prevent a certain time when the cache expires and a large number of 
 
 - When the cache fails and the same URL is requested several times at the same time, the program will launch a query database request, and collecting all requests in this query tim, when the database query is successful, all requests return a unified query result, and save to the cache. As shown below:
 
-![alt text](/doc/images/Cache%20Breakdown.png)
+![alt text](./doc/images/Cache%20Breakdown.png)
 
 ### Execution Queue
 
@@ -212,7 +212,7 @@ In this project, the request that takes the longest should be the operation to e
 
 - Similary, we can use Message Queue to do the same things.
 
-![alt text](/doc/images/execute_queue.png)
+![alt text](./doc/images/execute_queue.png)
 
 ### Lock
 
@@ -220,7 +220,7 @@ In order to prevent the user from repeatedly requesting the API over a period of
 
 - When the user makes a request other than GET and OPTION, the program will automatically add the corresponding API request lock to the user and delete it after the API is successfully executed. If the lock exists, the API is not allowed to be requested.
 
-![alt text](/doc/images/lock.png)
+![alt text](./doc/images/lock.png)
 
 ### Exception capture
 
@@ -230,7 +230,7 @@ Programs can use logger to record all behavior data, and add global exception ca
 
 In order to cope with high concurrency, we can use the multi-process mode in Node to increase the amount of concurrency. The specific principle is as follows:
 
-![alt text](/doc/images/process.png)
+![alt text](./doc/images/process.png)
 
 ## Security
 
