@@ -1,3 +1,5 @@
+import cluster from "node:cluster";
+import os from "node:os";
 import Koa from "koa";
 import cors from "@koa/cors";
 import koaBody from "koa-body";
@@ -7,38 +9,58 @@ import { errorHandle } from "./src/middleware";
 import ServerCache from "./src/utils/cache";
 import { releaseReqLock, requestLock } from "./src/middleware/lock";
 
-// Run Server Cache
-ServerCache.init();
+if (cluster.isPrimary) {
+  if (process.env.NODE_ENV === "development") {
+    // For dev
+    createServer();
+  } else {
+    const cups = os.availableParallelism();
+    for (let i = 0; i < cups; i++) {
+      cluster.fork(process.env.NODE_ENV);
+    }
+    cluster.on("exit", (worker) => {
+      console.log(`worker ${worker.process.pid} died`);
+    });
+  }
+} else {
+  createServer();
+}
 
-const app = new Koa();
+function createServer() {
+  // Run Server Cache, which is mock redis
+  ServerCache.init();
 
-// Global Handle Error Middleware
-app.use(errorHandle);
+  const app = new Koa();
 
-// Handle CORS
-app.use(cors());
+  // Global Handle Error Middleware
+  app.use(errorHandle);
 
-// Request Lock
-app.use(requestLock);
+  // Handle CORS
+  app.use(cors());
 
-// Handle Request's JSON Parameters
-app.use(
-  koaBody({
-    json: true,
-  })
-);
+  // Request Lock
+  app.use(requestLock);
 
-// RESTFul Router
-app.use(router.routes());
-app.use(router.allowedMethods());
+  // Handle Request's JSON Parameters
+  app.use(
+    koaBody({
+      json: true,
+    })
+  );
 
-// Release Lock
-app.use(releaseReqLock);
+  // RESTFul Router
+  app.use(router.routes());
+  app.use(router.allowedMethods());
 
-// Start Listen Port
-app.listen(config.port, () => {
-  console.log(`
+  // Release Lock
+  app.use(releaseReqLock);
+
+  // Start Listen Port
+  app.listen(config.port, () => {
+    console.log(`
     Web hook server running at ${config.port}
     Environment: ${process.env.NODE_ENV}
+    ProcessId: ${process.pid}
   `);
-});
+  });
+}

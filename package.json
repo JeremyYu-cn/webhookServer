@@ -5,7 +5,8 @@
   "main": "main.ts",
   "scripts": {
     "test": "yarn test",
-    "dev": "cross-env nodemon --exec NODE_ENV=development ts-node --files ./main.ts -O ./tsconfig.ts"
+    "dev": "cross-env nodemon --exec NODE_ENV=development ts-node --files ./main.ts -O ./tsconfig.ts",
+    "production": "cross-env nodemon --exec NODE_ENV=production ts-node --files ./main.ts -O ./tsconfig.ts"
   },
   "repository": {
     "type": "git",
