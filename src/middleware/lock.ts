@@ -17,7 +17,7 @@ export async function requestLock(
   const cacheKey = requestCacheKey(ctx.ip, ctx.method, ctx.path);
   // Check whether the lock is exists or not
   if (ServerCache.has(cacheKey)) {
-    ctx.body = "You request is pending, please wait.";
+    ctx.body = "Your request is pending, please wait.";
     return;
   }
 

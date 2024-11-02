@@ -5,15 +5,15 @@ import cors from "@koa/cors";
 import koaBody from "koa-body";
 import router from "./src/router";
 import config from "./config";
-import { errorHandle } from "./src/middleware";
+import { errorHandle, releaseReqLock, requestLock } from "./src/middleware";
 import ServerCache from "./src/utils/cache";
-import { releaseReqLock, requestLock } from "./src/middleware/lock";
 
 if (cluster.isPrimary) {
   if (process.env.NODE_ENV === "development") {
     // For dev
     createServer();
   } else {
+    // main process
     const cups = os.availableParallelism();
     for (let i = 0; i < cups; i++) {
       cluster.fork(process.env.NODE_ENV);
@@ -23,6 +23,7 @@ if (cluster.isPrimary) {
     });
   }
 } else {
+  // Runserver on child process
   createServer();
 }
 

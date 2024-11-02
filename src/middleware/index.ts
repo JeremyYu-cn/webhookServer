@@ -1,3 +1,4 @@
 import errorHandle from "./handleError";
+import { requestLock, releaseReqLock } from "./lock";
 
-export { errorHandle };
+export { errorHandle, requestLock, releaseReqLock };
