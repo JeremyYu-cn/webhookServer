@@ -204,6 +204,8 @@ In this project, the request that takes the longest should be the operation to e
 
 - Similary, we can use Message Queue to do the same things.
 
+![alt text](/doc/images/execute_queue.png)
+
 ### Lock
 
 In order to prevent the user from repeatedly requesting the API over a period of time, the program uses the cache to add a request lock, which is used as follows:
