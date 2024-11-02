@@ -194,6 +194,16 @@ In order to prevent a certain time when the cache expires and a large number of 
 
 ![alt text](/doc/images/Cache%20Breakdown.png)
 
+### Execution Queue
+
+In this project, the request that takes the longest should be the operation to execute the webhook. To address the challenge of high concurrency, the program uses a `work thread` to execute webhook projects asynchronously, as follows:
+
+- When the user requests to initiate the execution of webhook requests, the program will query all the request urls, the program will create a `requestId` to return to the user, and create a `work thread` to initiate all the requests. When all requests have been executed, the 'work thread' updates the results to the cache/database.
+
+- The user queries the execution result through the `requestID` returned by the program. The use of background execution can reduce the problem of insufficient bandwidth caused by too many requests at the same time and improve QPS.
+
+- Similary, we can use Message Queue to do the same things.
+
 ### Lock
 
 In order to prevent the user from repeatedly requesting the API over a period of time, the program uses the cache to add a request lock, which is used as follows:
