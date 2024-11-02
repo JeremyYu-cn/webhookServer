@@ -103,7 +103,7 @@ It can be seen that when we need to query data, the program will first search in
 
 ## API Design
 
-API 设计时，通过 RESTful API 的设计可以清晰地描述到对应 URL 的作用，例如请求方法 get 为获取数据，post 为新增数据或执行方法，put 为修改数据等等。
+When designing apis, the function of the corresponding URL can be clearly described through the design of RESTful apis, such as the request method get to obtain data, post to add data or execute methods, put to modify data and so on.
 
 ### API List：
 
@@ -115,65 +115,65 @@ API 设计时，通过 RESTful API 的设计可以清晰地描述到对应 URL �
 
 1. Get webhook project List
 
-- path: /list
+   - path: /list
 
-- method: GET
+   - method: GET
 
-- query:
+   - query:
 
-  - page: number
-  - size: number
+     - page: number
+     - size: number
 
 2. Get webhook project detail
 
-- path: /detail/:projectName
+   - path: /detail/:projectName
 
-- method: GET
+   - method: GET
 
 3. Edit webhook project record
 
-- path: /:projectName
+   - path: /:projectName
 
-- method: PUT
+   - method: PUT
 
-- parameters:
+   - parameters:
 
-  - status: boolean
+     - status: boolean
 
-  - list: string[]
+     - list: string[]
 
 4. Create webhook project record
 
-- path: /
+   - path: /
 
-- method: POST
+   - method: POST
 
-- parameters:
+   - parameters:
 
-  - projectName: string
+     - projectName: string
 
-  - status: boolean
+     - status: boolean
 
-  - list: string[]
+     - list: string[]
 
 5. Delete webhook project record
 
-- path: /:projectName
+   - path: /:projectName
 
-- method: DELETE
+   - method: DELETE
 
 6. Execute webhook project
 
-- path: /exec/:projectName
+   - path: /exec/:projectName
 
-- method: POST
+   - method: POST
 
-- return {
-  data: { requestId: string }
-  }
+   - return {
+     data: { requestId: string }
+     }
 
 7. Get execute result
 
-- path: /exec/:requestId
+   - path: /exec/:requestId
 
-- method: GET
+   - method: GET
