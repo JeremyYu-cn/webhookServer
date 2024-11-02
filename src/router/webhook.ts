@@ -3,6 +3,8 @@ import {
   createWebhookDetail,
   deleteWebhookDetail,
   editWebhookDetail,
+  execWebhookByName,
+  getExecuteResult,
   getWebhookDetail,
   getWebhookList,
 } from "../method/webhook";
@@ -67,8 +69,21 @@ router.delete("/:name", async (ctx) => {
   ctx.body = resFormat(res, null);
 });
 
+/** Execute Project's webhook */
 router.post("/exec/:name", async (ctx) => {
   const params = <TProjectParams>ctx.params;
+  const res = await execWebhookByName({ projectName: params.name });
+  ctx.body = resFormat(true, { requestId: res });
+});
+
+/** Get Execute Result */
+router.get("/exec/:requestId", async (ctx) => {
+  const { requestId } = ctx.params;
+  if (!requestId) {
+    ctx.body = resFormat(false, null, "Parameter reuestId cannot be null.");
+  }
+  const res = await getExecuteResult(requestId);
+  ctx.body = resFormat(true, res);
 });
 
 export default router;

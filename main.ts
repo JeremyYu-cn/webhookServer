@@ -4,6 +4,10 @@ import koaBody from "koa-body";
 import router from "./src/router";
 import config from "./config";
 import { errorHandle } from "./src/middleware";
+import ServerCache from "./src/utils/cache";
+
+// Run Server Cache
+ServerCache.init();
 
 const app = new Koa();
 

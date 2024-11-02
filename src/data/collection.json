@@ -93,6 +93,6 @@
     "id": "11",
     "name": "project_11",
     "status": true,
-    "list": ["http://localhost:10010/api/test"]
+    "list": ["http://localhost:10010/api/test/{projectName}"]
   }
 ]

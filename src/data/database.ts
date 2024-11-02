@@ -63,6 +63,7 @@ class ProjectList {
     return true;
   }
 
+  /** Create Project Record */
   public async createProjectData(data: IWebhookData) {
     if (!this._list) await this.init();
     const index = this._list?.findIndex((val) => val.name === data.name) ?? -1;
