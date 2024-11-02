@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import webhookRouter from "./webhook";
-import testRouter from "./test";
+import testRouter from "./testRouter";
 
 const router = new Router();
 router.prefix("/api");

@@ -48,7 +48,7 @@ class ProjectList {
 
     const index =
       this._list?.findIndex((val) => val.name === projectName) ?? -1;
-    if (index === -1 || !this._list) return false;
+    if (index <= -1 || !this._list) return false;
 
     this._list[index] = {
       id: this._list[index].id,
@@ -81,7 +81,7 @@ class ProjectList {
   public async deleteProjectData(name: string) {
     if (!this._list) await this.init();
     const index = this._list?.findIndex((val) => val.name === name) ?? -1;
-    if (index > -1 || !this._list) return false;
+    if (index <= -1 || !this._list) return false;
 
     this._list.splice(index, 1);
 

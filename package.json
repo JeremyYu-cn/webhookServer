@@ -4,9 +4,10 @@
   "description": "This is a webhook server project.",
   "main": "main.ts",
   "scripts": {
-    "test": "yarn test",
-    "dev": "cross-env nodemon --exec NODE_ENV=development ts-node --files ./main.ts -O ./tsconfig.ts",
-    "production": "cross-env nodemon --exec NODE_ENV=production ts-node --files ./main.ts -O ./tsconfig.ts"
+    "test": "yarn jest",
+    "dev": "cross-env nodemon -e ts,js --exec NODE_ENV=development ts-node --files ./main.ts -O ./tsconfig.ts",
+    "preview": "cross-env NODE_ENV=development ts-node --files ./main.ts -O ./tsconfig.ts",
+    "start": "cross-env NODE_ENV=production ts-node --files ./main.ts -O ./tsconfig.ts"
   },
   "repository": {
     "type": "git",
@@ -36,9 +37,11 @@
   "dependencies": {
     "@koa/cors": "^5.0.0",
     "@koa/router": "^13.1.0",
+    "@types/jest": "^29.5.14",
     "koa": "^2.15.3",
     "koa-body": "^6.0.1",
     "log4js": "^6.9.1",
+    "ts-jest": "^29.2.5",
     "uuid": "^11.0.2"
   }
 }

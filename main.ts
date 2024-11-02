@@ -42,11 +42,7 @@ function createServer() {
   app.use(requestLock);
 
   // Handle Request's JSON Parameters
-  app.use(
-    koaBody({
-      json: true,
-    })
-  );
+  app.use(koaBody());
 
   // RESTFul Router
   app.use(router.routes());

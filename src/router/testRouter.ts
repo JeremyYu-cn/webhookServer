@@ -7,6 +7,7 @@ const router = new Router({});
 router.get("/test/:projectName", async (ctx, next) => {
   const { projectName } = ctx.params;
   ctx.body = resFormat(true, `Hello ${projectName}`);
+
   await next();
 });
 

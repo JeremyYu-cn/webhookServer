@@ -26,7 +26,7 @@ const router = new Router({
 /** Get Project List */
 router.get("/list", async (ctx, next) => {
   const { page, size } = <TProjectListQuery>ctx.query;
-  const list = await getWebhookList(page, size);
+  const list = await getWebhookList(page ?? 1, size ?? 10);
   ctx.body = resFormat(true, list);
 
   await next();
@@ -44,7 +44,7 @@ router.get("/detail/:name", async (ctx, next) => {
 /** Modify Project Record By ProjectName */
 router.put("/:name", async (ctx, next) => {
   const { name } = <TProjectParams>ctx.params;
-  const body = <TEditProjectBody>ctx.body;
+  const body = <TEditProjectBody>ctx.request.body;
   if (!body) {
     ctx.body = resFormat(false, null, "Param Insufficient");
     await next();
@@ -59,7 +59,7 @@ router.put("/:name", async (ctx, next) => {
 
 /** Create New Project Record */
 router.post("/", async (ctx, next) => {
-  const body = <TAddProjectBody>ctx.body;
+  const body = <TAddProjectBody>ctx.request.body;
   if (!body.name) {
     ctx.body = resFormat(false, null, "Name cannot be null");
     await next();
@@ -84,7 +84,7 @@ router.post("/exec/:name", async (ctx, next) => {
   const params = <TProjectParams>ctx.params;
   const res = await execWebhookByName({ projectName: params.name });
   ctx.body = resFormat(true, { requestId: res });
-
+  console.log(ctx.body);
   await next();
 });
 

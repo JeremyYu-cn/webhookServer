@@ -2,8 +2,21 @@ import { v4 } from "uuid";
 import projectList from "../data/database";
 import RequestQueue from "./execute";
 import ServerCache from "../utils/cache";
+import QueryQueue from "../utils/reqQueue";
 
 const executeQueue = new RequestQueue();
+const queryQueue = new QueryQueue();
+
+// Registed query queue function
+// These methods are used to prevent the same request from making repeated requests to the database
+queryQueue.register(
+  "projectList.getByPage",
+  projectList.getByPage.bind(projectList)
+);
+queryQueue.register(
+  "projectList.getProjectByName",
+  projectList.getProjectByName.bind(projectList)
+);
 
 /** Common webhook detail key */
 function getWebHookCacheKey(projectName: string) {
@@ -11,9 +24,12 @@ function getWebHookCacheKey(projectName: string) {
 }
 
 /** To get webhook project list */
-export async function getWebhookList(page: number = 1, size: number = 10) {
-  return await projectList.getByPage(page, size);
-}
+export const getWebhookList = async function getWebhookList(
+  page: number,
+  size: number
+) {
+  return await queryQueue.execute("projectList.getByPage", page, size);
+};
 
 /** To get project detail */
 export async function getWebhookDetail(
@@ -26,7 +42,11 @@ export async function getWebhookDetail(
     return ServerCache.get(cacheKey);
   }
 
-  const result = await projectList.getProjectByName(projectName);
+  // Query Data
+  const result = await queryQueue.execute(
+    "projectList.getProjectByName",
+    projectName
+  );
 
   // Add Request Cache
   if (ServerCache.checkIsExpired(cacheKey)) {
