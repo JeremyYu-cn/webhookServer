@@ -67,7 +67,7 @@ export default class ServerCache {
     const tmp = this._map.get(key);
     if (!tmp) return true;
     const expiredDate =
-      tmp.createDate.getUTCSeconds() + (tmp?.during ?? 0) + 20;
+      tmp.createDate.getUTCSeconds() + (tmp?.during ?? 0) + deviation;
     return new Date().getUTCSeconds() - expiredDate > 0;
   }
 
