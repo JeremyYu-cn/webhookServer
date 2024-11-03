@@ -247,3 +247,20 @@ In order to cope with high concurrency, we can use the multi-process mode in Nod
 2. Replace native data management with MongoDB or Mysql.
 
 3. Use Redius to replace the program cache and implement persistence.
+
+4. Added formatting of user input information to prevent users from using scripts to invade services。
+
+## Frontend Project
+
+A simple Svelte project that uses simple HTML to present the Webhook Management Project.
+
+Features：
+
+1. Webhook Project Table.
+2. Delete Webhook Project.
+3. Set Project Status.
+4. Execute Webhook Project.
+
+- Position: /frontend
+
+- Run: `yarn dev`
