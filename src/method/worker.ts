@@ -19,6 +19,7 @@ Promise.allSettled(data.urls.map((val) => fetch(val)))
       return { key, status: val.status, res: text };
     });
     const result = await Promise.all(saveData);
+    console.log(result);
     // Post result to main thread
     parentPort?.postMessage(result);
   })

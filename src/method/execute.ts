@@ -59,6 +59,7 @@ export default class RequestQueue {
 
     worker.on("message", (res: TExecuteResult[] | string) => {
       if (!data) return;
+      console.log(res);
       // Send Result to Cache/DB
       ServerCache.set(data.id, res);
     });

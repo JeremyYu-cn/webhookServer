@@ -53,7 +53,8 @@ class ProjectList {
     this._list[index] = {
       id: this._list[index].id,
       name: projectName,
-      status: data.status ?? this._list[index].status,
+      status:
+        data.status === undefined ? this._list[index].status : data.status,
       list: data.list ?? this._list[index].list,
     };
 
