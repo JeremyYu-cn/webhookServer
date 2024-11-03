@@ -9,7 +9,6 @@ import {
   getWebhookList,
 } from "../method/webhook";
 import { resFormat } from "../utils/format";
-import { createListTable } from "../html/webhook";
 
 type TProjectParams = {
   name: string;
