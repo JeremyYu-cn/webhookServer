@@ -29,10 +29,7 @@ router.get("/list", async (ctx, next) => {
   const { page, size } = <TProjectListQuery>ctx.query;
   const list = await getWebhookList(page ?? 1, size ?? 10);
 
-  ctx.res.setHeader("Content-Type", "text/html");
-  ctx.body = createListTable(list ?? []);
-
-  // ctx.body = resFormat(true, list);
+  ctx.body = resFormat(true, list);
 
   await next();
 });
