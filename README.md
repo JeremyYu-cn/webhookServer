@@ -198,9 +198,31 @@ It will replace `{projectName}` into `project_11` automatically.
 
 In order to prevent a certain time when the cache expires and a large number of users pour in, the program designs a request queue mechanism, the principle is as follows:
 
-- When the cache fails and the same URL is requested several times at the same time, the program will launch a query database request, and collecting all requests in this query tim, when the database query is successful, all requests return a unified query result, and save to the cache. As shown below:
+- When the cache fails and the same URL is requested several times at the same time, the program will launch a query database request, and collecting all requests in this query time, when the database query is successful, all requests return a unified query result, and save to the cache. As shown below:
 
 ![alt text](./doc/images/Cache%20Breakdown.png)
+
+```typescript
+// Common execute request queue method
+  public execute<T>(key: string, ...params: T[]) {
+    if (!this._map.has(key)) throw "The Query method is not registered.";
+
+    const accessKey = `${key}_${JSON.stringify(params)}`;
+    // If there is no request in execute queue, push a pending method to execute queue.
+    if (!this._executeMap.has(accessKey)) {
+      const execFunc = (<TFunc>this._map.get(key))(...params);
+      this._executeMap.set(accessKey, execFunc);
+      execFunc.then(() => {
+        this._executeMap.delete(accessKey);
+      });
+      return execFunc;
+    } else {
+      // If a request is exists, return the pending method (or push this request to a pending queue).
+      return this._executeMap.get(accessKey);
+    }
+  }
+
+```
 
 ### Execution Queue
 
@@ -214,6 +236,46 @@ In this project, the request that takes the longest should be the operation to e
 
 ![alt text](./doc/images/execute_queue.png)
 
+```typescript
+// Create work thread code fragment.
+/** Create a work thread and execute request task */
+private execute() {
+  // Main Thread is used to create request worker
+  if (this.getPendingLen() <= 0) {
+    return;
+  }
+  // Get data from the pending queue
+  const data = this._list.shift();
+  this._executingLen++;
+
+  // Create a work thread for request
+  const worker = new Worker(this._workerPath, {
+    execArgv: ["-r", "ts-node/register"],
+    workerData: data,
+  });
+
+  worker.on("message", (res: TExecuteResult[] | string) => {
+    if (!data) return;
+    // Send Result to Cache/DB
+    ServerCache.set(data.id, res);
+  });
+  worker.on("error", (err) => {
+    // Catch error
+    webhookLog.error({
+      type: "work thread error",
+      text: err,
+    });
+  });
+  worker.on("exit", () => {
+    this._executingLen--;
+    if (this._executingLen < this._maxExecLen) {
+      this.execute();
+    }
+  });
+}
+
+```
+
 ### Lock
 
 In order to prevent the user from repeatedly requesting the API over a period of time, the program uses the cache to add a request lock, which is used as follows:
@@ -222,9 +284,62 @@ In order to prevent the user from repeatedly requesting the API over a period of
 
 ![alt text](./doc/images/lock.png)
 
+```typescript
+/**
+ * This method is a Koa middleware that used to lock request users,
+ * such that each user is only allowed to request one time in a peroid.
+ */
+export async function requestLock(
+  ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>,
+  next: Koa.Next
+) {
+  // Generally, the first parameter is userId
+  const cacheKey = requestCacheKey(ctx.ip, ctx.method, ctx.path);
+  // Check whether the lock is exists or not
+  if (ServerCache.has(cacheKey)) {
+    ctx.body = "Your request is pending, please wait.";
+    return;
+  }
+
+  // ignore GET and OPTION request method
+  if (!["GET", "OPTION"].includes(ctx.method.toLocaleUpperCase())) {
+    ServerCache.set(cacheKey, 1);
+  }
+
+  await next();
+}
+
+// Release Lock
+export async function releaseReqLock(
+  ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>,
+  next: Koa.Next
+) {
+  const cacheKey = requestCacheKey(ctx.ip, ctx.method, ctx.path);
+  ServerCache.delete(cacheKey);
+
+  await next();
+}
+```
+
 ### Exception capture
 
 Programs can use logger to record all behavior data, and add global exception capture code to koa service to capture unknown exception to ensure service stability. In addition, we can use Google Analysis to replace logger.
+
+```typescript
+export default async function errorHandle(
+  ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>,
+  next: Koa.Next
+) {
+  try {
+    await next();
+  } catch (err) {
+    console.log(err);
+    globalLog.error(logFormat(ctx, err));
+    ctx.res.statusCode = 500;
+    ctx.res.end("Server Error");
+  }
+}
+```
 
 ### Cluster
 
